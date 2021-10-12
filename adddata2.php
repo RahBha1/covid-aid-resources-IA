@@ -28,7 +28,7 @@ if(isset($_GET['id'])){
 ?>
 
 
-<?php // echo $hospitalname['id'] ?>
+
 <!DOCTYPE html>
 <!doctype html>
 <html lang="en">

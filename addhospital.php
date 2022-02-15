@@ -28,7 +28,7 @@ else{
 
 
 if(empty($_GET['borough'])){
-  echo 'A street number for the hospital is required <br />';}
+  echo 'A borough for the hospital is required <br />';}
 else{
   $borough = $_GET['borough'];
     if(!preg_match('/^[a-zA-X\s]+$/', $borough)){
@@ -64,7 +64,7 @@ else{
   $hospital_phone = mysqli_real_escape_string($conn, $_GET['hospital_phone']);
   $zipcode = mysqli_real_escape_string($conn, $_GET['zipcode']);
 
-  $sql = "INSERT INTO hospitals(name,streetname,borough,phonenumber,zipcode) VALUES('$hospital_name', '$street', '$borough', '$hospital_phone', '$zipcode')";
+  $sql = "INSERT INTO hospitals(name, streetname, borough, phonenumber, zipcode) VALUES ('$hospital_name', '$street', '$borough', '$hospital_phone', '$zipcode')";
 
 if(mysqli_query($conn, $sql)){
   header('Location: adddata.php');

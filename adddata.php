@@ -63,7 +63,6 @@
   <br>
   <br>
 <br>
-  <input type="submit" value="Proceed" href="adddata2.php?id=<?php echo $hospitalname['id'] ?>">
 
 </form><br>
 

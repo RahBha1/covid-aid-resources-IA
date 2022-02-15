@@ -21,7 +21,7 @@ if(isset($_GET['id'])){
   mysqli_free_result($result);
   mysqli_close($conn);
 
-  print_r($hospital);
+  //print_r($hospital);
 }
 
 
@@ -38,16 +38,20 @@ if(isset($_GET['id'])){
   <form class="blue lighten-4">
 
   <?php if($hospital): ?>
+    <h1><?php echo htmlspecialchars($hospital['name']); ?></h1>
+    <br>
     <h3>This Hospital's adress is: <?php echo htmlspecialchars($hospital['streetname']) ?>, <?php echo htmlspecialchars($hospital['borough']); ?>, Pune, India</h3>
-    <h4><?php echo htmlspecialchars($hospital['name']); ?></h4>
-    <p>Created by: <?php //echo htmlspecialchars($hospital['creator']); ?></p>
+    <br>
     <p><?php echo date($hospital['timestamp']); ?></p>
-    <h5>Oxygen: <?php //echo htmlspecialchars($hospital['oxygen']); ?>, approximate cylinders</h5>
-    <h5>Hospital Beds: <?php //echo htmlspecialchars($hospital['beds']); ?>, approximate beds</h5>
-    <h5>Remdesivir: <?php //echo htmlspecialchars($hospital['remdesivir']); ?>, approximate doses</h5>
-    <h5>Fabiflu: <?php //echo htmlspecialchars($hospital['fabiflu']); ?>, approximate doses</h5>
-    <h5>Vaccine: <?php //echo htmlspecialchars($hospital['vaccine']); ?>, approximate doses</h5>
-    <h5>Testing: <?php //echo htmlspecialchars($hospital['testing']); ?></h5>
+    <h3>Contact them using this phone number: <?php echo htmlspecialchars($hospital['phonenumber']) ?></h3>
+    <br>
+    <br>
+    <h5>Oxygen: <?php echo htmlspecialchars($hospital['oxygen']); ?> approximate cylinders</h5>
+    <h5>Hospital Beds: <?php echo htmlspecialchars($hospital['beds']); ?> approximate beds</h5>
+    <h5>Remdesivir: <?php echo htmlspecialchars($hospital['remdesivir']); ?> approximate doses</h5>
+    <h5>Fabiflu: <?php echo htmlspecialchars($hospital['fabiflu']); ?> approximate doses</h5>
+    <h5>Vaccine: <?php echo htmlspecialchars($hospital['vaccine']); ?> approximate doses</h5>
+    <h5>Testing: <?php echo htmlspecialchars($hospital['testing']); ?></h5>
 
   </form>
   <?php else: ?>

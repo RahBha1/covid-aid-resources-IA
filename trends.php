@@ -76,28 +76,28 @@
 		{
 			$('#submit_data').click(
 				function(){
-					var language = $('input[name=resource]:checked').val();
+					var resources = $('input[name=resource]:checked').val();
 
 					$.ajax({
 						url:"data.php",
 						method:"POST",
-						data:{action:'fetch', language:language},
+						data:{action:'fetch', resources:resources},
 						dataType:"JSON",
 						success:function(data)
 						{
-							var language = [];
+							var resources = [];
 							var total = [];
 							var color = [];
 
 							for(var count = 0; count < data.length; count++)
 							{
-								language.push(data[count].language);
+								resources.push(data[count].resources);
 								total.push(data[count].total);
 								color.push(data[count].color);
 							}
 
 							var chart_data = {
-								labels:language,
+								labels:resources,
 								datasets:[
 									{
 										label:'Vote',
@@ -127,7 +127,7 @@
 							});
 						},
 						error: function() {
-							alert('There was some error performing the AJAX call!');
+							alert('error');
 						}
 					})
 				}

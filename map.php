@@ -1,28 +1,15 @@
 <?php
-// connection to the 'covid_data' database
-$conn = mysqli_connect('localhost', 'rahul', 'whiplash10', 'covid_data');
 
-// checking if it has connected properly
+$conn = mysqli_connect('localhost', 'rahul', 'whiplash10', 'covid_data');
 if(!$conn){
 echo 'database connection error!: ' . mysqli_connect_error();}
-
-// write query for database
 $sql = 'SELECT * FROM hospitals ORDER BY id';
-
-// make query and get results
 $result = mysqli_query($conn, $sql);
-
-// fetch the resulting rows as an array
 $hospitalnames = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-// free result from memory
 mysqli_free_result($result);
-
-// close connection
 mysqli_close($conn);
- ?>
 
-
+?>
 
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -32,40 +19,63 @@ mysqli_close($conn);
     <br>
 
 <h1 style="text-align:center" class= "title">Map View</h1>
+
+
+<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+
+  Resource to check:
+    <select style="text-align:center;display: block;;" name="resource" id="options">
+    <option value=" "> </option>
+    <option name="oxygen" value="oxygen">Oxygen</option>
+    <option name="beds" value="beds">Hospital Beds</option>
+    <option name"remdesivir" value="remdesivir">Remdesivir</option>
+    <option name"fabiflu" value="fabiflu">Fabiflu</option>
+    <option name"vaccine" value="vaccine">Vaccine</option>
+    <option name"testing" value="testing">Testing</option>
+    <body>
+    </select>
+
+    <button id="btn">submit</button>
+  </form>
+
+
 <section class="section-1">
 
-  <?php foreach($hospitalnames as $hospitalname){ ?>
-    <?php if ($hospitalname['oxygen']==0): ?>
+
+  <?php
+  if($_SERVER["REQUEST_METHOD"] == "POST"){
+    $resource = trim($_POST["resource"]);
+   foreach($hospitalnames as $hospitalname){ ?>
+    <?php if ($hospitalname[$resource]==0): ?>
+      <a href="hospitaldetails.php?id=<?php echo $hospitalname['id'] ?>">
       <img class="id<?php echo $hospitalname['id']?>" src="images/redpin.png" />
+        </a>
     <?php else: ?>
-      <img class="id<?php echo $hospitalname['id']?>" src="images/greenpin.png" />
+      <a href="hospitaldetails.php?id=<?php echo $hospitalname['id'] ?>">
+      <img class="id<?php echo $hospitalname['id']?>" src="images/greenpin.png" <a href="hospitaldetails.php?id=<?php echo $hospitalname['id'] ?>"/></a>
+        </a>
+
     <?php endif; ?>
-  <?php } ?>
-
-
-
+  <?php } }?>
 
 
 </section>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
 
 
 <style media="screen">
-  * {
-    margin: 0;
-    padding: 0;
-  }
+
 
   .id1 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
     top: 458px;
@@ -75,243 +85,243 @@ mysqli_close($conn);
   .id2 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 493px;
+    top: 434px;
+    left: 483px;
   }
 
   .id3 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 497px;
+    top: 407px;
+    left: 470px;
   }
 
   .id4 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 501px;
+    top: 376px;
+    left: 466px;
   }
 
   .id5 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 505px;
+    top: 380px;
+    left: 337px;
   }
 
   .id6 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 509px;
+    top: 369px;
+    left: 410px;
   }
 
   .id7 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 513px;
+    top: 352px;
+    left: 345px;
   }
 
   .id8 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 517px;
+    top: 352px;
+    left: 349px;
   }
 
   .id9 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 521px;
+    top: 336px;
+    left: 303px;
   }
 
   .id10 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 525px;
+    top: 336px;
+    left: 303px;
   }
 
   .id11 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 529px;
+    top: 336px;
+    left: 325px;
   }
 
   .id12 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 533px;
+    top: 320px;
+    left: 240px;
   }
 
   .id13 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 537px;
+    top: 350px;
+    left: 100px;
   }
 
   .id14 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 541px;
+    top: 345px;
+    right: 110px;
   }
 
   .id15 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 545px;
+    top: 490px;
+    left: 330px;
   }
 
   .id16 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 549px;
+    top: 60px;
+    left: 60px;
   }
 
   .id17 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 553px;
+    top: 515px;
+    left: 500px;
   }
 
   .id18 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 557px;
+    top: 130px;
+    left: 5px;
   }
 
   .id19 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 561px;
+    top: 175px;
+    left: 482px;
   }
 
   .id20 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 565px;
+    top: 250px;
+    left: 200px;
   }
 
   .id21 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 569px;
+    top: 220px;
+    left: 35px;
   }
 
   .id22 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 573px;
+    top: 230px;
+    right: 90px;
   }
 
   .id23 {
     margin: 15;
     padding: 20;
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     background-color: blue;
     position:relative;
-    top: 458px;
-    left: 577px;
+    top: 110px;
+    right: 180px;
   }
 
 
@@ -343,3 +353,14 @@ mysqli_close($conn);
 
 </style>
 <?php include('footer.php'); ?>
+
+
+
+
+
+
+Kamla Nehru Hospital
+Mangalwar Peth Rd
+Gandhinagar
+20 2550 8500
+411002

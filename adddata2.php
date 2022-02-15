@@ -1,37 +1,77 @@
+
 <?php
-
-$conn = mysqli_connect('localhost', 'rahul', 'whiplash10', 'covid_data');
+require_once "config.php";
 if(!$conn){
-echo 'database connection error!: ' . mysqli_connect_error();}
+  echo 'database connection error!: ' . mysqli_connect_error();}
 
-// check GET request id parameter
-if(isset($_GET['id'])){
+$msg="";
 
-  $id = mysqli_real_escape_string($conn, $_GET['id']);
+  if($_SERVER["REQUEST_METHOD"] == "POST"){
 
-  //make sql and select all columns from the hospitals table using '*'
-  $sql = "SELECT * FROM hospitals WHERE id = $id";
+    $resource = trim($_POST["resource"]);
+    $name = $_GET['id'];
+    $newdata = trim($_POST["newdata"]);
 
-  //get the query results
-  $result = mysqli_query($conn,$sql);
+    $sql3 = "UPDATE hospitals SET ".$resource."='".$newdata."' WHERE id = '".$name."'";
 
-  //fetch the result in an associative array format
-  $hospital = mysqli_fetch_assoc($result);
-
-  mysqli_free_result($result);
-  mysqli_close($conn);
-
-  //print_r($hospital);
-}
+    $filename = $_FILES["uploadfile"]["name"];
+    $tempname = $_FILES["uploadfile"]["tmp_name"];
+    $folder = "image/".$filename;
 
 
-?>
+    if($_FILES['uploadfile']['error'] == UPLOAD_ERR_NO_FILE){
+      $msg = $msg."Upload evidence please.";
+      $uploadOk = 0;
+    }elseif(getimagesize($_FILES["uploadfile"]["tmp_name"]) !== false) {
+      $uploadOk = 1;
+    } else {
+      $msg = $msg."File is not an image.";
+      $uploadOk = 0;
+    }
+
+    if($uploadOk == 1){
+      // Get all the submitted data from the form
+      $sql = "INSERT INTO image (filename) VALUES ('$filename')";
+
+      // Execute query
+      mysqli_query($conn, $sql);
+
+      // Now let's move the uploaded image into the folder: image
+      if (move_uploaded_file($tempname, $folder)) {
+        $msg = $msg."Image uploaded successfully";
+      }else{
+        $msg = $msg."Failed to upload image";
+      }
+      if ($conn->query($sql3)){
+
+        header("location: covid.php");
+      }
+    }
+
+
+  }
+
+  if(isset($_GET['id'])){
+
+    $id = mysqli_real_escape_string($conn, $_GET['id']);
+
+    $sql = "SELECT * FROM hospitals WHERE id = $id";
+
+    $result = mysqli_query($conn,$sql);
+
+    $hospital = mysqli_fetch_assoc($result);
+
+    mysqli_free_result($result);
+
+  }
+  $conn->close();
+  ?>
 
 
 
-<!DOCTYPE html>
-<!doctype html>
-<html lang="en">
+  <!DOCTYPE html>
+  <!doctype html>
+  <html lang="en">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -41,68 +81,58 @@ if(isset($_GET['id'])){
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <body class="bg-primary darken-sm">
 
-<div style="text-align:center">
-  <title>Hello, world!</title>
-</head>
-<body>
-  <h1>Update Resource</h1>
-  <br>
-  <br>
-</div>
-<div style="text-align:center">
-  <?php if($hospital): ?>
-    <h3>These are the current resources for </h3>
-    <h3><?php echo htmlspecialchars($hospital['name']); ?></h3>
-    <br>
+      <div style="text-align:center">
+        <title>yo</title>
+      </head>
+      <body>
+        <a href="covid.php" class="btn red">Home</a>
+        <h1>Update Resource</h1>
+        <br>
+        <br>
+      </div>
+      <div style="text-align:center">
+        <?php if($hospital): ?>
+          <h3>These are the current resources for </h3>
+          <h3><?php echo htmlspecialchars($hospital['name']); ?></h3>
+          <br>
+          <h5>Oxygen: <?php echo htmlspecialchars($hospital['oxygen']); ?> approximate cylinders</h5>
+          <h5>Hospital Beds: <?php echo htmlspecialchars($hospital['beds']); ?> approximate beds</h5>
+          <h5>Remdesivir: <?php echo htmlspecialchars($hospital['remdesivir']); ?> approximate doses</h5>
+          <h5>Fabiflu: <?php echo htmlspecialchars($hospital['fabiflu']); ?> approximate doses</h5>
+          <h5>Vaccine: <?php echo htmlspecialchars($hospital['vaccine']); ?> approximate doses</h5>
+          <h5>Testing: <?php echo htmlspecialchars($hospital['testing']); ?></h5>
 
-    <h5>Oxygen: <?php echo htmlspecialchars($hospital['oxygen']); ?>, approximate cylinders</h5>
-    <h5>Hospital Beds: <?php echo htmlspecialchars($hospital['beds']); ?>, approximate beds</h5>
-    <h5>Remdesivir: <?php echo htmlspecialchars($hospital['remdesivir']); ?>, approximate doses</h5>
-    <h5>Fabiflu: <?php echo htmlspecialchars($hospital['fabiflu']); ?>, approximate doses</h5>
-    <h5>Vaccine: <?php echo htmlspecialchars($hospital['vaccine']); ?>, approximate doses</h5>
-    <h5>Testing: <?php echo htmlspecialchars($hospital['testing']); ?></h5>
+          <br>
+          <br>
 
-    <br>
-    <br>
-    Resource to Update: <select style="text-align:center" name="resource" id="options">
-                   <option value=" "> </option>
-                   <option value="oxygen">Oxygen</option>
-                   <option value="beds">Hospital Beds</option>
-                   <option value="remdesivir">Remdesivir</option>
-                   <option value="fabiflu">Fabiflu</option>
-                   <option value="vaccine">Vaccine</option>
-                   <option value="testing">Testing</option>
+          <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?id=<?php echo htmlspecialchars($hospital['id']); ?>" method="post" enctype="multipart/form-data">
 
-    </select>
-    <label for="newData">New Data:</label>
-    <input type="text" id="newData">
-    <button id="btn">submit</button>
-    <br>
+            Resource to Update: <select style="text-align:center" name="resource" id="options">
+              <option value=" "> </option>
+              <option name="oxygen" value="oxygen">Oxygen</option>
+              <option name="beds" value="beds">Hospital Beds</option>
+              <option name"remdesivir" value="remdesivir">Remdesivir</option>
+              <option name"fabiflu" value="fabiflu">Fabiflu</option>
+              <option name"vaccine" value="vaccine">Vaccine</option>
+              <option name"testing" value="testing">Testing</option>
+              <body>
+              </select>
 
+              <label for="newData">New Data:</label>
+              <input name = "newdata" type="text" id="newData">
+              <div>
+              Please upload a file as evidence:
+              <input type="file" name="uploadfile" value=""/>
+              <br>
+              <?php echo $msg; ?>
+            </div>
+              <button id="btn">submit</button>
+            </form>
 
-  <?php else: ?>
-    <h5>No such hospital exists!</h5>
-  <?php endif ?>
-</div>
-</body>
-<!-- <script>
+          <?php else: ?>
+            <h5>No such hospital exists!</h5>
+          <?php endif ?>
+        </div>
+      </body>
 
-$(document).ready(
-  function()
-  {
-    document.querySelector('#btn').onclick=(event)=>{
-      toUpdate = document.getElementById('#options').selectedIndex();
-      updateDate = document.getElementById('#newData').value;
-
-      $query = "
-  		UPDATE hospitals WHERE id LIKE " . $id . "
-  		(".  .") VALUES (:language)
-  		";
-
-  		$statement = $connect->prepare($query);
-
-  		$statement->execute($data);
-      ?>
-    }
-  } -->
-</html>
+  </html>
